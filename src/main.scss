@@ -1,0 +1,21 @@
+:root {
+  --switch-language-icon-size: 24px;
+}
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  overflow: auto;
+}
+
+#app {
+  max-width: 1920px;
+  min-width: 1280px;
+  margin: 0 auto;
+}
