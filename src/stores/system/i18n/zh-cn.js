@@ -1,4 +1,5 @@
 import ElementPlusLocale from 'element-plus/es/locale/lang/zh-cn'
+
 export default {
   app: {
     login: {
@@ -14,6 +15,11 @@ export default {
       },
     },
     register: {},
+    notice: {
+      'operate-confirm': '操作确认',
+      'under-development': '敬请期待',
+      'confirm-logout': '确定退出系统',
+    },
     error: {
       'invalid-token': '凭证已过期,请重新登录',
     },

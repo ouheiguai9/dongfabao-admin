@@ -1,41 +1,47 @@
 <template>
-  <el-config-provider :locale="getElementLocale()" :size="size" :z-index="zIndex">
-    <router-view v-if="isAuthentication" />
+  <el-config-provider :locale="systemStore.getElementLocale" :size="systemStore.size" :z-index="systemStore.zIndex">
+    <component :is="layout" v-if="isAuthentication">
+      <template #main>
+        <router-view />
+      </template>
+    </component>
     <no-auth v-else />
   </el-config-provider>
 </template>
 
 <script setup>
 import NoAuth from 'components/NoAuth.vue'
+import LayoutLeft from 'components/LayoutLeft.vue'
+import useFeedback from 'composables/feedback.js'
 import useSystemStore from 'stores/system'
 import useSecurityStore from 'stores/security'
 import { useRoute, useRouter } from 'vue-router'
-import { computed, ref, toRefs } from 'vue'
-import { ElMessage } from 'element-plus'
+import { computed } from 'vue'
+
+const layoutMap = {
+  LayoutLeft,
+}
+const feedback = useFeedback()
 const systemStore = useSystemStore()
 const securityStore = useSecurityStore()
-const { user } = toRefs(securityStore)
 const route = useRoute()
 const router = useRouter()
-const size = ref('small')
-const zIndex = ref(1000)
 
-function getElementLocale() {
-  return systemStore.getElementLocale
-}
 const isAuthentication = computed(() => {
-  return !!user.value
+  return !!securityStore.user
+})
+
+const layout = computed(() => {
+  return layoutMap[systemStore.layout] || LayoutLeft
 })
 await router.isReady()
 const query = route.query || {}
 try {
   await securityStore.resetToken(query.token)
 } catch (error) {
-  ElMessage({
+  feedback.message({
     message: systemStore.lang('app.error.invalid-token'),
     type: 'error',
   })
 }
 </script>
-
-<style scoped></style>

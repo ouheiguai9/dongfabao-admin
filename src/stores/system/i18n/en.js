@@ -1,4 +1,5 @@
 import ElementPlusLocale from 'element-plus/es/locale/lang/en'
+
 export default {
   app: {
     login: {
@@ -14,6 +15,11 @@ export default {
       },
     },
     register: {},
+    notice: {
+      'operate-confirm': 'confirm',
+      'under-development': 'Coming soon',
+      'confirm-logout': 'Confirm to exit the system',
+    },
     error: {
       'invalid-token': 'Your token is time out, please login again',
     },

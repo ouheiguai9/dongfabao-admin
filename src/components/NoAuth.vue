@@ -7,12 +7,12 @@
           <switch-language />
         </div>
       </template>
-      <el-form ref="loginFormRef" :model="form.login" size="large" :rules="loginFormRules">
+      <el-form ref="loginFormRef" :model="form.login" :rules="loginFormRules" size="large">
         <el-form-item prop="username">
           <el-input v-model="form.login.username" :placeholder="lang('app.login.user')" :prefix-icon="User" clearable />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.login.password" :placeholder="lang('app.login.password')" show-password :prefix-icon="Lock" clearable />
+          <el-input v-model="form.login.password" :placeholder="lang('app.login.password')" :prefix-icon="Lock" clearable show-password />
         </el-form-item>
         <div class="btn-box">
           <el-button type="primary" @click="onLogin">{{ lang('app.login.ok') }}</el-button>
@@ -29,12 +29,14 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { Lock, User } from '@element-plus/icons-vue'
 import SwitchLanguage from 'components/SwitchLanguage.vue'
+import useFeedback from 'composables/feedback.js'
 import useSystemStore from 'stores/system'
 import useSecurityStore from 'stores/security'
 import WebCopyright from 'components/WebCopyright.vue'
+
+const feedback = useFeedback()
 const systemStore = useSystemStore()
 const securityStore = useSecurityStore()
 const loginFormRef = ref(null)
@@ -69,7 +71,7 @@ function goToRegister() {
   if (systemStore.openRegistration) {
     showLoginCard.value = false
   } else {
-    ElMessage({
+    feedback.message({
       message: lang('app.login.message.disable-register'),
       type: 'warning',
     })
@@ -79,6 +81,7 @@ function goToRegister() {
 function goToLogin() {
   showLoginCard.value = true
 }
+
 function onLogin() {
   loginFormRef.value.validate((isValid) => {
     if (isValid) {
@@ -90,7 +93,7 @@ function onLogin() {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .no-auth-container {
   display: flex;
   width: 100%;
@@ -102,8 +105,8 @@ function onLogin() {
     content: '';
     position: absolute;
     display: inline-block;
-    width: 80px;
-    height: 80px;
+    width: 235px;
+    height: 88px;
     margin-top: -400px;
     background-image: url('assets/logo.svg');
     background-size: contain;

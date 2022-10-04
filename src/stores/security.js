@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { login, getAuthentication } from 'apis/security.js'
+import { getAuthentication, login, logout } from 'apis/security.js'
 
 const id = 'security'
 const tokenKey = `${import.meta.env.VITE_STORAGE_KEY_PREFIX}${id}_token`
@@ -13,14 +13,19 @@ export default defineStore(id, {
   },
   actions: {
     async resetToken(token) {
-      const newToken = token || this.token
-      if (!newToken) return
+      let updated = false
+      if (token && token !== this.token) {
+        this.token = token
+        updated = true
+      }
+      if (!this.token) return
       try {
-        const response = await getAuthentication(newToken)
-        this.token = newToken
+        const response = await getAuthentication()
         this.user = response.data
-        localStorage.setItem(tokenKey, newToken)
-        console.warn('token update to ', this.token)
+        if (updated) {
+          localStorage.setItem(tokenKey, this.token)
+          console.warn('token update to ', this.token)
+        }
       } catch (e) {
         this.token = null
         this.user = null
@@ -29,6 +34,14 @@ export default defineStore(id, {
     },
     login(username, password) {
       login(username, password).then(console.warn)
+    },
+    logout() {
+      return logout().then((res) => {
+        this.token = null
+        this.user = null
+        localStorage.removeItem(tokenKey)
+        return res
+      })
     },
   },
 })

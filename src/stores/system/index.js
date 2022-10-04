@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import i18n from './i18n'
+
 const id = 'system'
 const defaultLanguage = 'zhCn'
 
@@ -9,7 +10,12 @@ export default defineStore(id, {
       {
         //当前使用的语言，默认zhCn
         language: defaultLanguage,
+        //布局
+        layout: 'LayoutLeft',
+        //开放注册
         openRegistration: false,
+        size: 'small',
+        zIndex: 1000,
       },
       JSON.parse(localStorage.getItem(import.meta.env.VITE_STORAGE_KEY_PREFIX + id))
     )

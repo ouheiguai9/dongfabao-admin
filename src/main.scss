@@ -1,4 +1,25 @@
+@use 'element-plus/theme-chalk/el-loading.css';
+@use 'element-plus/theme-chalk/el-message.css';
+@use 'element-plus/theme-chalk/el-message-box.css';
+@use 'sass:math';
+
+$primary-color: #409eff;
 :root {
+  --el-color-primary: #{$primary-color};
+  @each $i in (3, 5, 7, 8, 9) {
+    --color-primary-light-#{$i}: #{mix(#FFF, $primary-color, math.percentage(math.div($i, 10)))}
+  }
+
+  --layout-icon-size: 24px;
+  --layout-icon-color: var(--el-text-color-primary);
+  --layout-icon-hover-color: var(--el-color-primary);
+  --layout-padding: 16px;
+  --layout-header-height: 48px;
+  --layout-header-bg: var(--el-bg-color);
+  --layout-menu-bg: var(--el-bg-color);
+  --layout-main-bg: var(--el-bg-color-page);
+  --layout-main-padding: var(--layout-padding);
+
   --switch-language-icon-size: 24px;
 }
 
@@ -18,4 +39,5 @@ body {
   max-width: 1920px;
   min-width: 1280px;
   margin: 0 auto;
+  background-image: none;
 }
