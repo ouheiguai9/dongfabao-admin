@@ -15,7 +15,9 @@ export default {
     },
     register: {},
     error: {
+      unknown: '未知错误',
       'invalid-token': '凭证已过期,请重新登录',
+      'network-error': '网络异常',
     },
   },
   element: ElementPlusLocale,

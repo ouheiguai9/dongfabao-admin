@@ -28,7 +28,11 @@ export default defineStore(id, {
       }
     },
     login(username, password) {
-      login(username, password).then(console.warn)
+      login(username, password).then(({ headers, data }) => {
+        this.token = headers['x-auth-token']
+        this.user = data
+        localStorage.setItem(tokenKey, this.token)
+      })
     },
   },
 })

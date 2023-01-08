@@ -82,7 +82,7 @@ function goToLogin() {
 function onLogin() {
   loginFormRef.value.validate((isValid) => {
     if (isValid) {
-      securityStore.login(form.login.username, form.login.password)
+      securityStore.login('M' + form.login.username, form.login.password)
     } else {
       return false
     }

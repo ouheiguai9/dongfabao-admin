@@ -15,7 +15,9 @@ export default {
     },
     register: {},
     error: {
+      unknown: 'Unknown error',
       'invalid-token': 'Your token is time out, please login again',
+      'network-error': 'Network error',
     },
   },
   element: ElementPlusLocale,

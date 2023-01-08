@@ -25,7 +25,7 @@ export const isHttpError = axios.isAxiosError
 export const isCancelError = axios.isCancel
 
 export const isNetworkError = function (error) {
-  return axios.isAxiosError(axios) && error.code === 'ERR_NETWORK'
+  return axios.isAxiosError(error) && error.code === 'ERR_NETWORK'
 }
 
 export const bindTokenGetter = (getter) => {
@@ -36,6 +36,7 @@ export const bindTokenGetter = (getter) => {
 
 export const useHttpFactory = new HttpFactory({
   baseURL: import.meta.env.VITE_API_BASE_URL,
+  withCredentials: false,
 })
 
 export const defaultClient = useHttpFactory.create()
