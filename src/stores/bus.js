@@ -4,6 +4,9 @@ const _actions = {
   setWindowSize({ width, height }) {
     this.windowSize = { width, height }
   },
+  setLastMessage({ type, message }) {
+    this.lastMessage = { type, message }
+  },
 }
 
 export default defineStore(id, {
@@ -13,6 +16,7 @@ export default defineStore(id, {
         width: 0,
         height: 0,
       },
+      lastMessage: {},
     }
   },
   actions: _actions,
