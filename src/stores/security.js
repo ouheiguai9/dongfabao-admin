@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getAuthentication, login, logout } from 'apis/security.js'
+import { meta } from '@/router/index.js'
 
 const id = 'security'
 const tokenKey = `${import.meta.env.VITE_STORAGE_KEY_PREFIX}${id}_token`

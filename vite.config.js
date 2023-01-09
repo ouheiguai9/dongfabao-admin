@@ -17,6 +17,7 @@ const htmlPlugin = () => {
 export default defineConfig({
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, 'src'),
       apis: path.resolve(__dirname, 'src/apis'),
       assets: path.resolve(__dirname, 'src/assets'),
       components: path.resolve(__dirname, 'src/components'),
