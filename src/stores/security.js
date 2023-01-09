@@ -11,6 +11,12 @@ export default defineStore(id, {
       user: null,
     }
   },
+  getters: {
+    getLoginUserName() {
+      const user = this.user || {}
+      return user.name || ''
+    },
+  },
   actions: {
     async resetToken(token) {
       let updated = false

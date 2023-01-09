@@ -1,8 +1,8 @@
 <template>
   <el-dropdown @command="onCommand">
     <span class="user-info">
-      <el-avatar :icon="UserFilled" :src="avatarUrl" />
-      <span :title="username" class="txt-username">&nbsp;{{ username }}</span>
+      <el-avatar :icon="UserFilled" />
+      <span :title="securityStore.getLoginUserName" class="txt-username"> &nbsp;{{ securityStore.getLoginUserName }} </span>
     </span>
     <template #dropdown>
       <el-dropdown-menu>
@@ -16,7 +16,6 @@
 
 <script setup>
 import { SwitchButton, Tools, User, UserFilled } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useFeedback from 'composables/feedback.js'
 import useSystemStore from 'stores/system'
@@ -26,8 +25,6 @@ const router = useRouter()
 const systemStore = useSystemStore()
 const securityStore = useSecurityStore()
 const feedback = useFeedback()
-const username = ref('测试用户111111')
-const avatarUrl = ref('https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng1.png')
 const lang = systemStore.lang
 
 function onCommand(command) {
