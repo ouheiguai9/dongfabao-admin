@@ -7,6 +7,10 @@ const routes = [
     path: '/',
     name: 'Home',
     component: HomeView,
+    meta: {
+      title: '首页',
+      isMenu: true,
+    },
   },
   {
     path: '/:pathMatch(.*)*',

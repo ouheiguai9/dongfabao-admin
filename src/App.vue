@@ -1,19 +1,21 @@
 <template>
   <suspense>
     <app-layout />
-    <template #fallback><div></div></template>
+    <template #fallback>
+      <div></div>
+    </template>
   </suspense>
 </template>
 <script setup>
+import { onBeforeMount, onBeforeUnmount } from 'vue'
 import useBus from 'composables/bus'
 import useWindowSize from 'composables/window-size'
 import AppLayout from 'components/AppLayout.vue'
 import useSecurityStore from 'stores/security'
 import useSystemStore from 'stores/system'
 import useBusStore from 'stores/bus.js'
-import { bindTokenGetter } from 'apis/http.js'
+import { bindTokenGetter, isHttpError, isNetworkError } from 'apis/http.js'
 import { ElMessage } from 'element-plus'
-import { isHttpError, isNetworkError } from 'apis/http.js'
 
 const securityStore = useSecurityStore()
 const systemStore = useSystemStore()
@@ -25,7 +27,8 @@ bus.subscribe(bus.keys.setLastMessage, (lastMessage) => {
   ElMessage(lastMessage)
 })
 bindTokenGetter(() => securityStore.token)
-window.addEventListener('unhandledrejection', (event) => {
+
+const rejectionHandler = (event) => {
   const { reason } = event
   let message = systemStore.lang('app.error.unknown')
   if (isHttpError(reason)) {
@@ -37,6 +40,15 @@ window.addEventListener('unhandledrejection', (event) => {
   }
   busStore.setLastMessage({ type: 'error', message })
   event.preventDefault()
+}
+
+onBeforeMount(() => {
+  window.addEventListener('unhandledrejection', rejectionHandler)
 })
+
+onBeforeUnmount(() => {
+  window.removeEventListener('unhandledrejection', rejectionHandler)
+})
+
 systemStore.$subscribe(() => systemStore.persist())
 </script>
