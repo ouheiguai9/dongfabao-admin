@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from 'views/HomeView.vue'
 import NotFoundView from 'views/NotFoundView.vue'
 
-const routesMeta = [
+export const getRouteConfig = () => [
   {
     name: 'Home',
     title: '首页',
@@ -13,29 +13,22 @@ const routesMeta = [
     },
   },
   {
-    name: 'Test',
-    title: '测试功能',
-    path: '/test',
-    children: [
-      {
-        name: 'Order',
-        title: '订单管理',
-        path: '/order',
-        component: () => import('views/OrderView.vue'),
-      },
-      {
-        name: 'Lawyer',
-        title: '律师管理',
-        path: '/lawyer',
-        component: () => import('views/LawyerView.vue'),
-      },
-      {
-        name: 'Customer',
-        title: '客户管理',
-        path: '/customer',
-        component: () => import('views/CustomerView.vue'),
-      },
-    ],
+    name: 'Order',
+    title: '订单管理',
+    path: '/order',
+    component: () => import('views/OrderView.vue'),
+  },
+  {
+    name: 'Lawyer',
+    title: '律师管理',
+    path: '/lawyer',
+    component: () => import('views/LawyerView.vue'),
+  },
+  {
+    name: 'Customer',
+    title: '客户管理',
+    path: '/customer',
+    component: () => import('views/CustomerView.vue'),
   },
   {
     name: 'NotFound',
@@ -66,7 +59,7 @@ const extractRoute = (routes, curr, prev = { name: '', path: '' }) => {
   }
 }
 
-const routes = routesMeta.reduce((routes, meta) => {
+const routes = getRouteConfig().reduce((routes, meta) => {
   extractRoute(routes, meta)
   return routes
 }, [])
@@ -76,5 +69,3 @@ const router = createRouter({
   routes,
 })
 export default router
-
-export const meta = routesMeta
