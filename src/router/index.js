@@ -2,41 +2,66 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from 'views/HomeView.vue'
 import NotFoundView from 'views/NotFoundView.vue'
 
+/**
+ * 静态路由配置
+ * {
+ *  path: string,//地址
+ *  component: {},//组件
+ *  name: string,//路由名称
+ *  icon: string,//菜单图标,仅一级菜单生效
+ *  noAuth: boolean,//不需要权限
+ *  title: string,//路由标题
+ *  notMenu: boolean//不是菜单
+ * }
+ * @returns 静态路由配置
+ */
 export const getRouteConfig = () => [
   {
     name: 'Home',
     title: '首页',
     path: '/',
+    icon: '&#xe6cb;',
     component: HomeView,
-    meta: {
-      always: true,
-    },
+    noAuth: true,
+    notMenu: true,
   },
   {
     name: 'Order',
     title: '订单管理',
     path: '/order',
+    icon: '&#xe615;',
     component: () => import('views/OrderView.vue'),
   },
   {
     name: 'Lawyer',
     title: '律师管理',
     path: '/lawyer',
+    icon: '&#xe6ed;',
     component: () => import('views/LawyerView.vue'),
   },
   {
     name: 'Customer',
     title: '客户管理',
     path: '/customer',
+    icon: '&#xe634;',
     component: () => import('views/CustomerView.vue'),
   },
   {
+    name: 'Profile',
+    title: '个人中心',
+    path: '/profile',
+    component: () => import('views/ProfileView.vue'),
+    noAuth: true,
+    notMenu: true,
+  },
+  {
     name: 'NotFound',
+    title: '无效地址',
     path: '/:pathMatch(.*)*',
     component: NotFoundView,
-    meta: {
-      always: true,
-    },
+    icon: '&#xe6cb;',
+    noAuth: true,
+    notMenu: true,
   },
 ]
 
@@ -68,4 +93,5 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
 export default router

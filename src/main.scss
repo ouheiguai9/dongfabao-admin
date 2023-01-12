@@ -4,6 +4,7 @@
 @use 'sass:math';
 
 $primary-color: #409eff;
+
 :root {
   --el-color-primary: #{$primary-color};
   @each $i in (3, 5, 7, 8, 9) {
@@ -19,8 +20,15 @@ $primary-color: #409eff;
   --layout-menu-bg: var(--el-bg-color);
   --layout-main-bg: var(--el-bg-color-page);
   --layout-main-padding: var(--layout-padding);
+  --switch-language-icon-size: var(--layout-icon-size);
+}
 
-  --switch-language-icon-size: 24px;
+@font-face {
+  font-family: iconfont;
+  src: url('assets/icon-font/iconfont.woff2?t=1545807318834') format('woff2'),
+  url('assets/icon-font/iconfont.woff?t=1545807318834') format('woff'),
+  url('assets/icon-font/iconfont.ttf?t=1545807318834') format('truetype'),
+  url('assets/icon-font/iconfont.svg?t=1545807318834#iconfont') format('svg');
 }
 
 html, body, #app {
@@ -40,4 +48,12 @@ body {
   min-width: 1280px;
   margin: 0 auto;
   background-image: none;
+  border-left: 1px solid var(--el-border-color);
+  border-right: 1px solid var(--el-border-color);
+}
+
+.icon-font {
+  font-family: iconfont, serif !important;
+  font-style: normal;
+  font-size: var(--layout-icon-size);
 }

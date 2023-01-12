@@ -47,6 +47,8 @@ function onCommand(command) {
           })
       })
       .catch(() => {})
+  } else if (command === 'profile') {
+    router.push({ name: 'Profile' })
   } else {
     feedback.message({
       message: lang('app.notice.under-development'),

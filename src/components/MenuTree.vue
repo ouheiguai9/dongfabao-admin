@@ -1,6 +1,7 @@
 <template>
   <template v-for="node in menuList">
     <el-menu-item v-if="node.component" :key="node.name" :index="prefix + node.name">
+      <el-icon><span class="icon-font" v-html="node.icon"></span></el-icon>
       <span>{{ node.title }}</span>
     </el-menu-item>
     <el-sub-menu v-else :key="node.name" :index="prefix + node.name">
@@ -25,6 +26,5 @@ const props = defineProps({
     default: '',
   },
 })
-
-const menuList = computed(() => props.nodeList.filter((x) => x.title))
+const menuList = computed(() => props.nodeList.filter((x) => !x.notMenu))
 </script>

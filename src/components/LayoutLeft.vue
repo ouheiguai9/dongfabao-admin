@@ -3,7 +3,7 @@
     <aside :class="{ 'aside-fold': !expandAside }">
       <div class="aside-logo"></div>
       <el-scrollbar>
-        <el-menu :collapse="!expandAside" class="el-menu-no-border" default-active="2">
+        <el-menu :collapse="!expandAside" class="el-menu-no-border" :default-active="router.currentRoute.value.name" @select="onSelectMenu">
           <menu-tree :node-list="nodeList"></menu-tree>
         </el-menu>
       </el-scrollbar>
@@ -18,7 +18,10 @@
     </aside>
     <main>
       <header>
-        <div />
+        <el-breadcrumb :separator-icon="ArrowRight">
+          <el-breadcrumb-item :to="{ name: 'Home' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item v-for="name in breadList" :key="name" :to="{ name }">{{ name }}</el-breadcrumb-item>
+        </el-breadcrumb>
         <header-tool-bar></header-tool-bar>
       </header>
       <el-scrollbar view-style="padding: var(--layout-main-padding)">
@@ -29,14 +32,35 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import HeaderToolBar from 'components/HeaderToolBar.vue'
-import { Expand, Fold } from '@element-plus/icons-vue'
+import { Expand, Fold, ArrowRight } from '@element-plus/icons-vue'
 import { getRouteConfig } from '@/router/index.js'
 import MenuTree from 'components/MenuTree.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const expandAside = ref(true)
 const nodeList = ref(getRouteConfig())
+
+function onSelectMenu(index) {
+  router.push({ name: index })
+}
+
+const breadList = computed(() => {
+  const list = []
+  let name = router.currentRoute.value.name
+  if (name !== 'Home') {
+    list.push(name)
+    let index = -1
+    while ((index = name.lastIndexOf('/')) > -1) {
+      name = name.substring(0, index)
+      list.unshift(name)
+    }
+  }
+
+  return list
+})
 </script>
 
 <style lang="scss" scoped>
