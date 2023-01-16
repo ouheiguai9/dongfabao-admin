@@ -65,16 +65,18 @@ export const getRouteConfig = () => [
   },
 ]
 
-const extractRoute = (routes, curr, prev = { name: '', path: '' }) => {
-  const { component, children, meta } = curr
+const extractRoute = (routes, curr, prev = { name: '', path: '', title: '' }) => {
+  const { component, children, meta = {} } = curr
   const next = {
     name: prev.name === '' ? curr.name : prev.name + '-' + curr.name,
     path: prev.path + curr.path,
+    title: prev.title === '' ? curr.title : prev.title + '-' + curr.title,
   }
   if (component) {
     if (children && children.length > 0) {
       throw new Error('Route configuration error')
     }
+    meta.title = next.title
     routes.push({ ...next, component, meta })
   } else {
     if (!children || children.length === 0) {

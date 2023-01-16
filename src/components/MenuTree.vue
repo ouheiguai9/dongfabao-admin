@@ -1,11 +1,12 @@
 <template>
   <template v-for="node in menuList">
     <el-menu-item v-if="node.component" :key="node.name" :index="prefix + node.name">
-      <el-icon><span class="icon-font" v-html="node.icon"></span></el-icon>
+      <el-icon v-if="!prefix"><span class="icon-font" v-html="node.icon"></span></el-icon>
       <span>{{ node.title }}</span>
     </el-menu-item>
     <el-sub-menu v-else :key="node.name" :index="prefix + node.name">
       <template #title>
+        <el-icon v-if="!prefix"><span class="icon-font" v-html="node.icon"></span></el-icon>
         <span>{{ node.title }}</span>
       </template>
       <menu-tree :node-list="node.children" :prefix="prefix + node.name + '-'"></menu-tree>

@@ -18,9 +18,11 @@
     </aside>
     <main>
       <header>
-        <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ name: 'Home' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item v-for="name in breadList" :key="name" :to="{ name }">{{ name }}</el-breadcrumb-item>
+        <el-breadcrumb :separator-icon="ArrowRight" class="aaa">
+          <el-breadcrumb-item :to="{ name: 'Home' }">
+            <el-icon><i class="icon-font">&#xe6cb;</i></el-icon>
+          </el-breadcrumb-item>
+          <el-breadcrumb-item v-for="item in breadList" :key="item.name" :to="item">{{ item.title }}</el-breadcrumb-item>
         </el-breadcrumb>
         <header-tool-bar></header-tool-bar>
       </header>
@@ -34,7 +36,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import HeaderToolBar from 'components/HeaderToolBar.vue'
-import { Expand, Fold, ArrowRight } from '@element-plus/icons-vue'
+import { Expand, Fold, ArrowRight, HomeFilled } from '@element-plus/icons-vue'
 import { getRouteConfig } from '@/router/index.js'
 import MenuTree from 'components/MenuTree.vue'
 import { useRouter } from 'vue-router'
@@ -49,16 +51,16 @@ function onSelectMenu(index) {
 
 const breadList = computed(() => {
   const list = []
-  let name = router.currentRoute.value.name
-  if (name !== 'Home') {
-    list.push(name)
-    let index = -1
-    while ((index = name.lastIndexOf('/')) > -1) {
-      name = name.substring(0, index)
-      list.unshift(name)
-    }
+  if (router.currentRoute.value.name !== 'Home') {
+    const names = router.currentRoute.value.name.split('-')
+    const titles = router.currentRoute.value.meta.title.split('-')
+    names.forEach((item, index) => {
+      list.push({
+        name: item,
+        title: titles[index],
+      })
+    })
   }
-
   return list
 })
 </script>
@@ -134,6 +136,10 @@ const breadList = computed(() => {
       background-color: var(--layout-header-bg);
       box-shadow: var(--el-box-shadow-light);
       border-bottom: var(--el-border);
+
+      ::v-deep .el-breadcrumb__inner.is-link {
+        font-weight: 400;
+      }
     }
   }
 }
