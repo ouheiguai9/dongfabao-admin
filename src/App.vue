@@ -7,25 +7,24 @@
   </suspense>
 </template>
 <script setup>
-import { onBeforeMount, onBeforeUnmount } from 'vue'
+import { onBeforeMount, onBeforeUnmount, provide } from 'vue'
 import useBus from 'composables/bus'
 import useWindowSize from 'composables/window-size'
+import useFeedback from 'composables/feedback.js'
 import AppLayout from 'components/AppLayout.vue'
 import useSecurityStore from 'stores/security'
 import useSystemStore from 'stores/system'
 import useBusStore from 'stores/bus.js'
 import { bindTokenGetter, isHttpError, isNetworkError } from 'apis/http.js'
-import { ElMessage } from 'element-plus'
 
 const securityStore = useSecurityStore()
 const systemStore = useSystemStore()
 const busStore = useBusStore()
 const bus = useBus()
+const feedback = useFeedback()
 useWindowSize()
 
-bus.subscribe(bus.keys.setLastMessage, (lastMessage) => {
-  ElMessage(lastMessage)
-})
+bus.subscribe(bus.keys.setLastMessage, feedback.message)
 bindTokenGetter(() => securityStore.token)
 
 const rejectionHandler = (event) => {
@@ -48,6 +47,10 @@ onBeforeMount(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('unhandledrejection', rejectionHandler)
+})
+
+provide('successfulCallback', () => {
+  busStore.setLastMessage({ type: 'success', message: systemStore.lang('app.notice.operate-success') })
 })
 
 systemStore.$subscribe(() => systemStore.persist())

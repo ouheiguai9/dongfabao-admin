@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+
 const id = 'bus'
 const _actions = {
   setWindowSize({ width, height }) {

@@ -16,6 +16,7 @@ export default {
     },
     register: {},
     notice: {
+      'operate-success': '操作成功',
       'operate-confirm': '操作确认',
       'under-development': '敬请期待',
       'confirm-logout': '确定退出系统',

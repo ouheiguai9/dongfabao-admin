@@ -12,6 +12,13 @@ export const login = (username, password) => {
   })
 }
 
+export const changePassword = (oPass, nPass) => {
+  const params = new URLSearchParams()
+  params.append('oPass', oPass)
+  params.append('nPass', nPass)
+  return defaultClient.post('/users/change/password', params)
+}
+
 export const logout = () => {
   return defaultClient.post('logout')
 }

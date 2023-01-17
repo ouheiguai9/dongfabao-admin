@@ -16,7 +16,8 @@ export default {
     },
     register: {},
     notice: {
-      'operate-confirm': 'confirm',
+      'operate-success': 'Operation succeeded',
+      'operate-confirm': 'Confirm',
       'under-development': 'Coming soon',
       'confirm-logout': 'Confirm to exit the system',
     },

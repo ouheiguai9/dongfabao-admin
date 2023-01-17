@@ -3,7 +3,7 @@
     <aside :class="{ 'aside-fold': !expandAside }">
       <div class="aside-logo"></div>
       <el-scrollbar>
-        <el-menu :collapse="!expandAside" class="el-menu-no-border" :default-active="router.currentRoute.value.name" @select="onSelectMenu">
+        <el-menu :collapse="!expandAside" :default-active="router.currentRoute.value.name" class="el-menu-no-border" @select="onSelectMenu">
           <menu-tree :node-list="nodeList"></menu-tree>
         </el-menu>
       </el-scrollbar>
@@ -22,11 +22,11 @@
           <el-breadcrumb-item :to="{ name: 'Home' }">
             <el-icon><i class="icon-font">&#xe6cb;</i></el-icon>
           </el-breadcrumb-item>
-          <el-breadcrumb-item v-for="item in breadList" :key="item.name" :to="item">{{ item.title }}</el-breadcrumb-item>
+          <el-breadcrumb-item v-for="item in breadList" :key="item.name" :to="item">{{ item.title }} </el-breadcrumb-item>
         </el-breadcrumb>
         <header-tool-bar></header-tool-bar>
       </header>
-      <el-scrollbar view-style="padding: var(--layout-main-padding)">
+      <el-scrollbar class="main-scroll-view">
         <slot name="main"></slot>
       </el-scrollbar>
     </main>
@@ -36,9 +36,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import HeaderToolBar from 'components/HeaderToolBar.vue'
-import { Expand, Fold, ArrowRight, HomeFilled } from '@element-plus/icons-vue'
+import { ArrowRight, Expand, Fold } from '@element-plus/icons-vue'
 import { getRouteConfig } from '@/router/index.js'
-import MenuTree from 'components/MenuTree.vue'
+import MenuTree from 'components/pure/MenuTree.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -137,9 +137,13 @@ const breadList = computed(() => {
       box-shadow: var(--el-box-shadow-light);
       border-bottom: var(--el-border);
 
-      ::v-deep .el-breadcrumb__inner.is-link {
+      ::v-deep(.el-breadcrumb__inner.is-link) {
         font-weight: 400;
       }
+    }
+
+    .main-scroll-view {
+      padding: var(--layout-main-padding);
     }
   }
 }
