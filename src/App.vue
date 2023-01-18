@@ -1,17 +1,19 @@
 <template>
-  <suspense>
-    <app-layout />
-    <template #fallback>
-      <div></div>
-    </template>
-  </suspense>
+  <div id="app-root-element" v-loading.fullscreen.lock="statusStore.showLoading">
+    <suspense>
+      <app-layout />
+      <template #fallback>
+        <div></div>
+      </template>
+    </suspense>
+  </div>
 </template>
 <script setup>
-import { onBeforeMount, onBeforeUnmount, provide } from 'vue'
+import { onBeforeMount, onMounted, onBeforeUnmount, provide } from 'vue'
 import useFeedback from 'composables/feedback.js'
 import AppLayout from 'components/AppLayout.vue'
-import useSecurityStore from 'stores/security'
-import useSystemStore from 'stores/system'
+import useSecurityStore from 'stores/security.js'
+import useSystemStore from 'stores/system/index.js'
 import useStatusStore from 'stores/status.js'
 import { bindTokenGetter, isHttpError, isNetworkError } from 'apis/http.js'
 import utils from 'utils/index.js'
@@ -44,6 +46,10 @@ const rejectionHandler = (event) => {
 onBeforeMount(() => {
   window.addEventListener('resize', onWindowResize)
   window.addEventListener('unhandledrejection', rejectionHandler)
+})
+
+onMounted(() => {
+  onWindowResize()
 })
 
 onBeforeUnmount(() => {

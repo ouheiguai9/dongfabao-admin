@@ -1,12 +1,22 @@
-import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import useSystemStore from 'stores/system/index.js'
+import useStatusStore from 'stores/status.js'
 
 export default function useFeedback() {
   const systemStore = useSystemStore()
+  const statusStore = useStatusStore()
   return {
-    loading: ElLoading.service,
-    message: ElMessage,
-    confirm: ElMessageBox.confirm,
+    showAppLoading() {
+      statusStore.loadingCounter++
+    },
+    closeAppLoading() {
+      if (statusStore.loadingCounter > 0) {
+        statusStore.loadingCounter--
+      }
+    },
+    showConfirm(title, message) {
+      return ElMessageBox.confirm(systemStore.lang(title), systemStore.lang(message), { type: 'warning' })
+    },
     showSuccessMessage(message) {
       if (!message) {
         message = 'app.notice.operate-success'

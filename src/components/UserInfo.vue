@@ -17,33 +17,26 @@
 <script setup>
 import { SwitchButton, Tools, User, UserFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import useFeedback from 'composables/feedback.js'
-import useSystemStore from 'stores/system'
 import useSecurityStore from 'stores/security.js'
+import { inject } from 'vue'
 
 const router = useRouter()
-const systemStore = useSystemStore()
 const securityStore = useSecurityStore()
-const feedback = useFeedback()
-const lang = systemStore.lang
+const feedback = inject('feedback')
 
 function onCommand(command) {
   if (command === 'logout') {
     feedback
-      .confirm(`${lang('app.notice.confirm-logout')}?`, lang('app.notice.operate-confirm'), {
-        type: 'warning',
-      })
+      .showConfirm('app.notice.confirm-logout', 'app.notice.operate-confirm')
       .then(() => {
-        const loading = feedback.loading({
-          lock: true,
-        })
+        feedback.showAppLoading()
         securityStore
           .logout()
           .then(() => {
             router.push({ name: 'Home' })
           })
           .finally(() => {
-            loading.close()
+            feedback.closeAppLoading()
           })
       })
       .catch(() => {})

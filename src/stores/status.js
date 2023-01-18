@@ -9,7 +9,13 @@ export default defineStore(id, {
         width: 0,
         height: 0,
       },
+      loadingCounter: 0,
     }
+  },
+  getters: {
+    showLoading(state) {
+      return state.loadingCounter > 0
+    },
   },
   actions: {
     resetWindowSize(width, height) {

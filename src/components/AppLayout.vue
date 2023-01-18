@@ -12,16 +12,15 @@
 <script setup>
 import NoAuth from 'components/NoAuth.vue'
 import LayoutLeft from 'components/LayoutLeft.vue'
-import useFeedback from 'composables/feedback.js'
-import useSystemStore from 'stores/system'
-import useSecurityStore from 'stores/security'
+import useSystemStore from 'stores/system/index.js'
+import useSecurityStore from 'stores/security.js'
 import { useRoute, useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 const layoutMap = {
   LayoutLeft,
 }
-const feedback = useFeedback()
+const feedback = inject('feedback')
 const systemStore = useSystemStore()
 const securityStore = useSecurityStore()
 const route = useRoute()
@@ -39,9 +38,6 @@ const query = route.query || {}
 try {
   await securityStore.resetToken(query.token)
 } catch (error) {
-  feedback.message({
-    message: systemStore.lang('app.error.invalid-token'),
-    type: 'error',
-  })
+  feedback.showErrorMessage('app.error.invalid-token')
 }
 </script>

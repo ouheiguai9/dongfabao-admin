@@ -28,15 +28,14 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, inject } from 'vue'
 import { Lock, User } from '@element-plus/icons-vue'
 import SwitchLanguage from 'components/SwitchLanguage.vue'
-import useFeedback from 'composables/feedback.js'
-import useSystemStore from 'stores/system'
-import useSecurityStore from 'stores/security'
+import useSystemStore from 'stores/system/index.js'
+import useSecurityStore from 'stores/security.js'
 import WebCopyright from 'components/WebCopyright.vue'
 
-const feedback = useFeedback()
+const feedback = inject('feedback')
 const systemStore = useSystemStore()
 const securityStore = useSecurityStore()
 const loginFormRef = ref(null)
@@ -71,10 +70,7 @@ function goToRegister() {
   if (systemStore.openRegistration) {
     showLoginCard.value = false
   } else {
-    feedback.message({
-      message: lang('app.login.message.disable-register'),
-      type: 'warning',
-    })
+    feedback.showWarnMessage('app.login.message.disable-register')
   }
 }
 
