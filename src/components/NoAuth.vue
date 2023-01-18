@@ -15,7 +15,7 @@
           <el-input v-model="form.login.password" :placeholder="lang('app.login.password')" :prefix-icon="Lock" clearable show-password />
         </el-form-item>
         <div class="btn-box">
-          <el-button type="primary" @click="onLogin">{{ lang('app.login.ok') }}</el-button>
+          <el-button type="primary" @click="onLogin" :loading="loginPending">{{ lang('app.login.ok') }}</el-button>
           <el-button @click="goToRegister">{{ lang('app.login.register') }}</el-button>
         </div>
       </el-form>
@@ -41,6 +41,7 @@ const securityStore = useSecurityStore()
 const loginFormRef = ref(null)
 const showLoginCard = ref(true)
 const lang = systemStore.lang
+const loginPending = ref(false)
 const form = reactive({
   login: {
     username: '',
@@ -81,7 +82,8 @@ function goToLogin() {
 function onLogin() {
   loginFormRef.value.validate((isValid) => {
     if (isValid) {
-      securityStore.login('M' + form.login.username, form.login.password)
+      loginPending.value = true
+      securityStore.login('M' + form.login.username, form.login.password).finally(() => (loginPending.value = false))
     } else {
       return false
     }

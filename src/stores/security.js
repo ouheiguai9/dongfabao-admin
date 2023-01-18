@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getAuthentication, login, logout } from 'apis/security.js'
+import { getAuthentication, login as apiLogin, logout } from 'apis/security.js'
 
 const id = 'security'
 const tokenKey = `${import.meta.env.VITE_STORAGE_KEY_PREFIX}${id}_token`
@@ -39,7 +39,7 @@ export default defineStore(id, {
       }
     },
     login(username, password) {
-      login(username, password).then(({ headers, data }) => {
+      return apiLogin(username, password).then(({ headers, data }) => {
         this.token = headers['x-auth-token']
         this.user = data
         localStorage.setItem(tokenKey, this.token)
