@@ -34,7 +34,7 @@ import { changePassword } from 'apis/security.js'
 
 const refSecureForm = ref()
 const tabName = ref('base')
-const successfulCallback = inject('successfulCallback')
+const feedback = inject('feedback')
 const secureForm = reactive({
   oPass: '',
   nPass: '',
@@ -42,7 +42,7 @@ const secureForm = reactive({
 })
 
 function changePass() {
-  changePassword(secureForm.oPass, secureForm.nPass).then(successfulCallback)
+  changePassword(secureForm.oPass, secureForm.nPass).then(() => feedback.showSuccessMessage())
 }
 
 function resetForm(refForm) {

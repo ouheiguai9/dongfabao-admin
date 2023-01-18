@@ -8,50 +8,49 @@
 </template>
 <script setup>
 import { onBeforeMount, onBeforeUnmount, provide } from 'vue'
-import useBus from 'composables/bus'
-import useWindowSize from 'composables/window-size'
 import useFeedback from 'composables/feedback.js'
 import AppLayout from 'components/AppLayout.vue'
 import useSecurityStore from 'stores/security'
 import useSystemStore from 'stores/system'
-import useBusStore from 'stores/bus.js'
+import useStatusStore from 'stores/status.js'
 import { bindTokenGetter, isHttpError, isNetworkError } from 'apis/http.js'
+import utils from 'utils/index.js'
 
 const securityStore = useSecurityStore()
 const systemStore = useSystemStore()
-const busStore = useBusStore()
-const bus = useBus()
+const statusStore = useStatusStore()
 const feedback = useFeedback()
-useWindowSize()
 
-bus.subscribe(bus.keys.setLastMessage, feedback.message)
 bindTokenGetter(() => securityStore.token)
+
+const onWindowResize = utils.debounce(() => {
+  statusStore.resetWindowSize(document.documentElement.clientWidth, document.documentElement.clientHeight)
+}, 100)
 
 const rejectionHandler = (event) => {
   const { reason } = event
-  let message = systemStore.lang('app.error.unknown')
+  let message = ''
   if (isHttpError(reason)) {
     if (isNetworkError(reason)) {
-      message = systemStore.lang('app.error.network-error')
+      message = 'app.error.network-error'
     } else {
       message = reason.response.data.message
     }
   }
-  busStore.setLastMessage({ type: 'error', message })
+  feedback.showErrorMessage(message)
   event.preventDefault()
 }
 
 onBeforeMount(() => {
+  window.addEventListener('resize', onWindowResize)
   window.addEventListener('unhandledrejection', rejectionHandler)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('unhandledrejection', rejectionHandler)
+  window.removeEventListener('resize', onWindowResize)
 })
 
-provide('successfulCallback', () => {
-  busStore.setLastMessage({ type: 'success', message: systemStore.lang('app.notice.operate-success') })
-})
-
+provide('feedback', feedback)
 systemStore.$subscribe(() => systemStore.persist())
 </script>

@@ -5,12 +5,15 @@ const id = 'status'
 export default defineStore(id, {
   state() {
     return {
-      route: null,
+      windowSize: {
+        width: 0,
+        height: 0,
+      },
     }
   },
-  getters: {
-    routeName(state) {
-      return state.route === null ? 'Home' : state.route.name
+  actions: {
+    resetWindowSize(width, height) {
+      this.windowSize = { width, height }
     },
   },
 })
