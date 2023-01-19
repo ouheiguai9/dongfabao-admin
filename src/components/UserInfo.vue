@@ -43,7 +43,7 @@ function onCommand(command) {
   } else if (command === 'profile') {
     router.push({ name: 'Profile' })
   } else {
-    feedback.showWarnMessage('app.notice.under-development')
+    feedback.showTodoMessage()
   }
 }
 </script>

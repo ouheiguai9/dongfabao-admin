@@ -33,5 +33,8 @@ export default function useFeedback() {
     showWarnMessage(message) {
       ElMessage({ type: 'warning', message })
     },
+    showTodoMessage() {
+      ElMessage({ type: 'warning', message: '敬请期待' })
+    },
   }
 }

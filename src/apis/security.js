@@ -1,6 +1,6 @@
-import { defaultClient, headerTokenKey } from 'apis/http.js'
+import { defaultClient } from 'apis/http.js'
 
-export const login = (username, password) => {
+export const apiLogin = (username, password) => {
   return defaultClient.post('/api/login', null, {
     headers: {
       _auth_type_key_: 'standard',
@@ -12,21 +12,17 @@ export const login = (username, password) => {
   })
 }
 
-export const changePassword = (oPass, nPass) => {
+export const apiChangePassword = (oPass, nPass) => {
   const params = new URLSearchParams()
   params.append('oPass', oPass)
   params.append('nPass', nPass)
   return defaultClient.post('/users/change/password', params)
 }
 
-export const logout = () => {
-  return defaultClient.post('logout')
-}
+export const apiChangeUserInfo = (user) => defaultClient.patch('/users/me', user)
 
-export const getAuthentication = (token) => {
-  const conf = {
-    headers: {},
-  }
-  conf.headers[headerTokenKey] = token
-  return defaultClient.get('/authorizations/me', conf)
-}
+export const apiLogout = () => defaultClient.post('logout')
+
+export const apiGetAuthentication = () => defaultClient.get('/authorizations/me')
+
+export const apiGetUserInfo = () => defaultClient.get('/users/me')
