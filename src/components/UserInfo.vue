@@ -27,7 +27,7 @@ const feedback = inject('feedback')
 function onCommand(command) {
   if (command === 'logout') {
     feedback
-      .showConfirm('app.notice.confirm-logout', 'app.notice.operate-confirm')
+      .showConfirm('确定退出系统')
       .then(() => {
         feedback.showAppLoading()
         securityStore

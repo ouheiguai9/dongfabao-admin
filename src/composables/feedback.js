@@ -1,9 +1,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
-import useSystemStore from 'stores/system/index.js'
 import useStatusStore from 'stores/status.js'
 
 export default function useFeedback() {
-  const systemStore = useSystemStore()
   const statusStore = useStatusStore()
   return {
     showAppLoading() {
@@ -14,23 +12,26 @@ export default function useFeedback() {
         statusStore.loadingCounter--
       }
     },
-    showConfirm(title, message) {
-      return ElMessageBox.confirm(systemStore.lang(title), systemStore.lang(message), { type: 'warning' })
+    showConfirm(message, title) {
+      if (!title) {
+        title = '操作确认'
+      }
+      return ElMessageBox.confirm(message, title, { type: 'warning' })
     },
     showSuccessMessage(message) {
       if (!message) {
-        message = 'app.notice.operate-success'
+        message = '操作成功'
       }
-      ElMessage({ type: 'success', message: systemStore.lang(message) })
+      ElMessage({ type: 'success', message })
     },
     showErrorMessage(message) {
       if (!message) {
-        message = 'app.error.unknown'
+        message = '未知错误'
       }
-      ElMessage({ type: 'error', message: systemStore.lang(message) })
+      ElMessage({ type: 'error', message })
     },
     showWarnMessage(message) {
-      ElMessage({ type: 'warning', message: systemStore.lang(message) })
+      ElMessage({ type: 'warning', message })
     },
   }
 }

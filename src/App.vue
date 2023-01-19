@@ -9,11 +9,11 @@
   </div>
 </template>
 <script setup>
-import { onBeforeMount, onMounted, onBeforeUnmount, provide } from 'vue'
+import { onBeforeMount, onBeforeUnmount, onMounted, provide } from 'vue'
 import useFeedback from 'composables/feedback.js'
 import AppLayout from 'components/AppLayout.vue'
 import useSecurityStore from 'stores/security.js'
-import useSystemStore from 'stores/system/index.js'
+import useSystemStore from 'stores/system.js'
 import useStatusStore from 'stores/status.js'
 import { bindTokenGetter, isHttpError, isNetworkError } from 'apis/http.js'
 import utils from 'utils/index.js'
@@ -34,7 +34,7 @@ const rejectionHandler = (event) => {
   let message = ''
   if (isHttpError(reason)) {
     if (isNetworkError(reason)) {
-      message = 'app.error.network-error'
+      message = '网络异常'
     } else {
       message = reason.response.data.message
     }

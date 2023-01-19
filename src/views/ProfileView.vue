@@ -8,13 +8,13 @@
         <el-row>
           <el-col :span="10">
             <el-form ref="refSecureForm" :model="secureForm" label-width="auto" status-icon>
-              <el-form-item label="原密码" prop="oPass">
+              <el-form-item label="原密码" prop="oPass" required>
                 <el-input v-model="secureForm.oPass" autocomplete="off" type="password" />
               </el-form-item>
-              <el-form-item label="新密码" prop="nPass">
+              <el-form-item label="新密码" prop="nPass" required>
                 <el-input v-model="secureForm.nPass" autocomplete="off" type="password" />
               </el-form-item>
-              <el-form-item label="密码确认" prop="cPass">
+              <el-form-item label="密码确认" prop="cPass" required>
                 <el-input v-model="secureForm.cPass" autocomplete="off" type="password" />
               </el-form-item>
               <el-form-item>
@@ -42,7 +42,13 @@ const secureForm = reactive({
 })
 
 function changePass() {
-  changePassword(secureForm.oPass, secureForm.nPass).then(() => feedback.showSuccessMessage())
+  refSecureForm.value.validate((valid) => {
+    if (valid) {
+      changePassword(secureForm.oPass, secureForm.nPass).then(() => feedback.showSuccessMessage())
+    } else {
+      return false
+    }
+  })
 }
 
 function resetForm(refForm) {

@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup>
-import useSystemStore from 'stores/system'
+import useSystemStore from 'stores/system.js'
 
 const systemStore = useSystemStore()
 

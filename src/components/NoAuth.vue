@@ -2,76 +2,70 @@
   <div class="no-auth-container">
     <el-card v-if="showLoginCard" class="login-card">
       <template #header>
-        <div class="login-card-title">
-          {{ lang('app.login.title') }}
-          <switch-language />
-        </div>
+        <div class="login-card-title">{{ appTitle }}</div>
       </template>
-      <el-form ref="loginFormRef" :model="form.login" :rules="loginFormRules" size="large">
+      <el-form ref="refLoginForm" :model="form.login" :rules="loginFormRules" size="large">
         <el-form-item prop="username">
-          <el-input v-model="form.login.username" :placeholder="lang('app.login.user')" :prefix-icon="User" clearable />
+          <el-input v-model="form.login.username" :prefix-icon="User" clearable placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.login.password" :placeholder="lang('app.login.password')" :prefix-icon="Lock" clearable show-password />
+          <el-input v-model="form.login.password" :prefix-icon="Lock" clearable placeholder="请输入密码" show-password />
         </el-form-item>
         <div class="btn-box">
-          <el-button type="primary" @click="onLogin" :loading="loginPending">{{ lang('app.login.ok') }}</el-button>
-          <el-button @click="goToRegister">{{ lang('app.login.register') }}</el-button>
+          <el-button :loading="loginPending" type="primary" @click="onLogin">登录</el-button>
+          <el-button @click="goToRegister">注册</el-button>
         </div>
       </el-form>
     </el-card>
     <el-card v-else>
-      <el-button type="primary" @click="goToLogin">{{ lang('app.login.ok') }}</el-button>
+      <el-button type="primary" @click="goToLogin">注册</el-button>
     </el-card>
     <web-copyright class="no-auth-web-copyright" />
   </div>
 </template>
 
 <script setup>
-import { computed, reactive, ref, inject } from 'vue'
+import { inject, reactive, ref } from 'vue'
 import { Lock, User } from '@element-plus/icons-vue'
-import SwitchLanguage from 'components/SwitchLanguage.vue'
-import useSystemStore from 'stores/system/index.js'
+import useSystemStore from 'stores/system.js'
 import useSecurityStore from 'stores/security.js'
 import WebCopyright from 'components/WebCopyright.vue'
 
+const appTitle = import.meta.env.VITE_APP_TITLE
 const feedback = inject('feedback')
 const systemStore = useSystemStore()
 const securityStore = useSecurityStore()
-const loginFormRef = ref(null)
+const refLoginForm = ref()
 const showLoginCard = ref(true)
-const lang = systemStore.lang
 const loginPending = ref(false)
-const form = reactive({
+const form = ref({
   login: {
     username: '',
     password: '',
   },
 })
-const loginFormRules = computed(() => {
-  return {
-    username: [
-      {
-        required: true,
-        message: lang('app.login.message.empty-username'),
-        trigger: 'blur',
-      },
-    ],
-    password: [
-      {
-        required: true,
-        message: lang('app.login.message.empty-password'),
-        trigger: 'blur',
-      },
-    ],
-  }
+const loginFormRules = reactive({
+  username: [
+    {
+      required: true,
+      message: '用户名不能为空',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '密码不能为空',
+      trigger: 'blur',
+    },
+  ],
 })
 
 function goToRegister() {
   if (systemStore.openRegistration) {
     showLoginCard.value = false
   } else {
-    feedback.showWarnMessage('app.login.message.disable-register')
+    feedback.showWarnMessage('系统暂不对外开放注册')
   }
 }
 
@@ -80,10 +74,10 @@ function goToLogin() {
 }
 
 function onLogin() {
-  loginFormRef.value.validate((isValid) => {
+  refLoginForm.value.validate((isValid) => {
     if (isValid) {
       loginPending.value = true
-      securityStore.login('M' + form.login.username, form.login.password).finally(() => (loginPending.value = false))
+      securityStore.login('M' + form.value.login.username, form.value.login.password).finally(() => (loginPending.value = false))
     } else {
       return false
     }
