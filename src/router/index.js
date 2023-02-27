@@ -47,6 +47,13 @@ export const getRouteConfig = () => [
     component: () => import('views/CustomerView.vue'),
   },
   {
+    name: 'Comment',
+    title: '评价管理',
+    path: '/comment',
+    icon: '&#xe634;',
+    component: () => import('views/CommentView.vue'),
+  },
+  {
     name: 'Profile',
     title: '个人中心',
     path: '/profile',
