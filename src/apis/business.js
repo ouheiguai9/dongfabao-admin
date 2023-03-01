@@ -6,3 +6,7 @@ export const apiGetCommentList = ({ page = 0, size = 20, ...params } = {}) => {
     params: Object.assign({ page, size }, params),
   })
 }
+
+export const apiUpdateCommentVisible = (id, visible) => {
+  return defaultClient.post(`${businessPrefix}/orders/comments/visible/${id}/${visible}`)
+}

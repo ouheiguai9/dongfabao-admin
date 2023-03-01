@@ -70,6 +70,7 @@ const breadList = computed(() => {
   display: flex;
   position: relative;
   height: 100%;
+  width: 100%;
   background-color: var(--layout-main-bg);
 
   aside {
@@ -121,6 +122,7 @@ const breadList = computed(() => {
   main {
     display: flex;
     position: relative;
+    width: 100%;
     flex-direction: column;
     flex: auto;
 
@@ -143,6 +145,7 @@ const breadList = computed(() => {
     }
 
     .main-scroll-view {
+      display: grid;
       padding: var(--layout-main-padding);
     }
   }
