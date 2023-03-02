@@ -2,7 +2,13 @@
   <el-config-provider :locale="zhCn" :size="systemStore.size" :z-index="systemStore.zIndex">
     <component :is="layout" v-if="isAuthentication">
       <template #main>
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition mode="out-in">
+            <keep-alive :max="20">
+              <component :is="Component" />
+            </keep-alive>
+          </transition>
+        </router-view>
       </template>
     </component>
     <no-auth v-else />

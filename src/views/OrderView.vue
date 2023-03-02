@@ -3,11 +3,8 @@
 </template>
 <script setup>
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { ref } from 'vue'
 
 const router = useRouter()
-const orderId = computed(() => {
-  console.warn(router)
-  return router
-})
+const orderId = ref(router.currentRoute.value.query.orderId)
 </script>
