@@ -1,4 +1,6 @@
 import axios from 'axios'
+import qs from 'qs'
+
 const HEADER_TOKEN_KEY = 'X-Auth-Token'
 
 function HttpFactory(config = {}) {
@@ -34,9 +36,11 @@ export const bindTokenGetter = (getter) => {
   }
 }
 
+export const paramsSerializer = (params) => qs.stringify(params, { indices: false, skipNulls: true, encode: false })
+
 export const useHttpFactory = new HttpFactory({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: false,
+  paramsSerializer,
 })
 
 export const defaultClient = useHttpFactory.create()

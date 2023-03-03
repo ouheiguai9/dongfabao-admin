@@ -1,4 +1,4 @@
-import { defaultClient } from 'apis/http.js'
+import { defaultClient, paramsSerializer } from 'apis/http.js'
 
 export const apiLogin = (username, password) => {
   return defaultClient.post('/api/login', null, {
@@ -12,12 +12,7 @@ export const apiLogin = (username, password) => {
   })
 }
 
-export const apiChangePassword = (oPass, nPass) => {
-  const params = new URLSearchParams()
-  params.append('oPass', oPass)
-  params.append('nPass', nPass)
-  return defaultClient.post('/users/change/password', params)
-}
+export const apiChangePassword = (oPass, nPass) => defaultClient.post('/users/change/password', paramsSerializer({ oPass, nPass }))
 
 export const apiChangeUserInfo = (user) => defaultClient.patch('/users/me', user)
 

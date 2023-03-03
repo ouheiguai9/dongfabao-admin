@@ -67,3 +67,16 @@ body {
 .v-leave-to {
   opacity: 0;
 }
+
+.condition-form {
+
+  .el-select {
+    width: 100%;
+  }
+
+  .button-group {
+    &>.el-form-item__content {
+      justify-content: right;
+    }
+  }
+}
