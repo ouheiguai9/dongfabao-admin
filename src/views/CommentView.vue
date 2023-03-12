@@ -88,7 +88,7 @@
         </el-row>
       </el-form>
       <el-table :data="tableData" :row-class-name="rowClassName" border stripe>
-        <el-table-column fixed label="订单编号" width="120">
+        <el-table-column fixed header-align="center" label="订单编号" width="120">
           <template #default="scope">
             <el-link type="primary" @click="goToOrder(scope.row)">
               {{ scope.row.orderId }}
@@ -96,20 +96,20 @@
           </template>
         </el-table-column>
         <el-table-column align="center" fixed header-align="center" label="客户" prop="customer" width="120" />
-        <el-table-column fixed label="律师" prop="lawyer" width="120" />
+        <el-table-column fixed label="律师" header-align="center" prop="lawyer" width="120" />
         <el-table-column align="center" header-align="center" label="评分" width="160">
           <template #default="scope">
             <el-rate v-model="scope.row.value" disabled size="small" />
           </template>
         </el-table-column>
-        <el-table-column label="标签" width="470">
+        <el-table-column label="标签" header-align="center" width="470">
           <template #default="scope">
             <el-tag v-for="item in tags" v-show="scope.row[item.value]" :key="item.value" class="comment-tag" effect="light" round size="small">
               {{ item.text }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="内容" prop="content" show-overflow-tooltip width="600" />
+        <el-table-column label="内容" header-align="center" prop="content" show-overflow-tooltip width="600" />
         <el-table-column align="center" header-align="center" label="时间" prop="createTime" width="180" />
         <el-table-column align="center" fixed="right" header-align="center" label="操作" width="90">
           <template #default="scope">
