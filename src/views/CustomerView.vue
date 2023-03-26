@@ -51,7 +51,7 @@ const tableData = ref([])
 const copyQueryParam = {}
 function doQuery() {
   pager.page = 0
-  Object.assign(copyQueryParam, toRaw(queryForm))
+  Object.assign(copyQueryParam, JSON.parse(JSON.stringify(toRaw(queryForm))))
   search()
 }
 

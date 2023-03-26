@@ -37,7 +37,7 @@ export const getRouteConfig = () => [
     title: '律师管理',
     path: '/lawyer',
     icon: '&#xe6ed;',
-    component: () => import('views/LawyerView.vue'),
+    component: () => import('views/LawyerView/IndexView.vue'),
   },
   {
     name: 'Customer',
