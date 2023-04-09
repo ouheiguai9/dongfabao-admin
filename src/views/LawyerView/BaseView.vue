@@ -49,7 +49,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" border stripe>
+    <el-table :data="tableData" :row-class-name="rowClassName" border stripe>
       <el-table-column fixed header-align="center" label="律师电话" width="120">
         <template #default="scope">
           <el-link type="primary" @click="lawyer = scope.row">
@@ -60,11 +60,40 @@
       <el-table-column align="center" fixed header-align="center" label="律师姓名" prop="name" width="120" />
       <el-table-column align="center" fixed header-align="center" label="律师状态" width="120">
         <template #default="scope">
-          <el-tag size="small" :type="'CREATED|NOT_APPROVED'.indexOf(scope.row.state) > -1 ? 'danger' : 'success'">{{ scope.row.stateText }}</el-tag>
+          <el-tag size="small" :type="isApproved(scope.row.state) ? 'success' : 'danger'">
+            {{ scope.row.stateText }}
+          </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="内容" header-align="center" prop="content" show-overflow-tooltip width="600" />
       <el-table-column align="center" header-align="center" label="时间" prop="createTime" width="180" />
+      <el-table-column align="center" header-align="center" label="身份证号" prop="certificate" width="200" />
+      <el-table-column align="center" header-align="center" label="执业证号" prop="lawId" width="200" />
+      <el-table-column header-align="center" label="执业律所" prop="lawFirm" show-overflow-tooltip width="200" />
+      <el-table-column header-align="center" label="开户银行" prop="bank" show-overflow-tooltip width="200" />
+      <el-table-column header-align="center" label="银行卡号" prop="bankId" width="200" />
+      <el-table-column label="擅长领域" header-align="center" width="640">
+        <template #default="scope">
+          <el-tag v-for="item in skillItemList" v-show="scope.row[item.value]" :key="item.value" effect="light" class="skill-tag" round size="small">
+            {{ item.text }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" fixed="right" header-align="center" label="操作" width="180">
+        <template #default="scope">
+          <el-button size="small" type="danger" @click="handleLocked(scope.row)" v-if="isApproved(scope.row.state) && !scope.row.backup">
+            {{ scope.row.locked ? '启用' : '禁用' }}
+          </el-button>
+          <el-button size="small" type="danger" @click="handleBackup(scope.row)" v-if="isApproved(scope.row.state) && !scope.row.locked">
+            {{ scope.row.backup ? '取消兜底' : '设为兜底' }}
+          </el-button>
+          <el-button size="small" type="danger" @click="handleApprove(scope.row, 'APPROVED')" v-if="'NOT_APPROVED' === scope.row.state"
+            >通过
+          </el-button>
+          <el-button size="small" type="danger" @click="handleApprove(scope.row, 'REJECTED')" v-if="'NOT_APPROVED' === scope.row.state"
+            >拒绝
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <pure-pagination :page="pager.page" :size="pager.size" :total-elements="pager.totalElements" @change="search()"></pure-pagination>
   </section>
@@ -72,7 +101,15 @@
 
 <script setup>
 import { inject, onBeforeMount, reactive, ref, toRaw } from 'vue'
-import { apiGetLawyerList, apiGetLawyerStateList } from 'apis/business.js'
+import {
+  apiApproveLawyer,
+  apiGetLawyerList,
+  apiGetLawyerStateList,
+  apiUpdateCommentVisible,
+  apiUpdateLawyerBackup,
+  apiUpdateLawyerLocked,
+} from 'apis/business.js'
+import PurePagination from 'components/pure/PurePagination.vue'
 
 const feedback = inject('feedback')
 const lawyer = ref(null)
@@ -129,6 +166,7 @@ const pager = reactive({
 })
 const tableData = ref([])
 const copyQueryParam = {}
+
 function doQuery() {
   pager.page = 0
   Object.assign(copyQueryParam, JSON.parse(JSON.stringify(toRaw(queryForm))))
@@ -146,10 +184,57 @@ function search() {
     .finally(() => feedback.closeAppLoading())
 }
 
+function handleLocked(lawyer) {
+  feedback.showAppLoading()
+  apiUpdateLawyerLocked(lawyer.id, !lawyer.locked)
+    .then(({ data }) => {
+      lawyer.locked = !lawyer.locked
+    })
+    .finally(() => feedback.closeAppLoading())
+}
+
+function handleBackup(lawyer) {
+  feedback.showAppLoading()
+  apiUpdateLawyerBackup(lawyer.id, !lawyer.backup)
+    .then(({ data }) => {
+      lawyer.backup = !lawyer.backup
+    })
+    .finally(() => feedback.closeAppLoading())
+}
+
+function handleApprove(lawyer, action) {
+  feedback.showAppLoading()
+  apiApproveLawyer(lawyer.id, action)
+    .then(({ data }) => {
+      lawyer.state = data.state
+      lawyer.stateText = data.stateText
+    })
+    .finally(() => feedback.closeAppLoading())
+}
+
+function rowClassName({ row }) {
+  if (row.locked) {
+    return 'locked-row'
+  }
+  return ''
+}
+
+function isApproved(state) {
+  return 'CREATED|NOT_APPROVED'.indexOf(state) === -1
+}
+
 onBeforeMount(() => {
   apiGetLawyerStateList().then(({ data }) => (stateList.value = data))
   search()
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+::v-deep(.locked-row) {
+  text-decoration: line-through;
+}
+
+.skill-tag {
+  margin-right: 4px;
+}
+</style>
