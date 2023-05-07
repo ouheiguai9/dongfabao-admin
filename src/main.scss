@@ -68,8 +68,11 @@ body {
   opacity: 0;
 }
 
-.condition-form {
+.center-content {
+  text-align: center !important;
+}
 
+.condition-form {
   .el-select {
     width: 100%;
   }
