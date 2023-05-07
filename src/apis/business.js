@@ -4,7 +4,7 @@ const businessPrefix = import.meta.env.VITE_BUSINESS_API_BASE_URL
 export const apiGetCustomerList = (params) => defaultClient.get(`${businessPrefix}/customers`, { params })
 
 export const apiGetLawyerList = (params) => defaultClient.get(`${businessPrefix}/lawyers`, { params })
-
+export const apiUpdateLawyer = (lawyer) => defaultClient.patch(`${businessPrefix}/lawyers`, lawyer)
 export const apiGetLawyerStateList = () => defaultClient.get(`${businessPrefix}/lawyers/states`)
 export const apiUpdateLawyerLocked = (id, locked) => defaultClient.post(`${businessPrefix}/lawyers/locked/${id}/${locked}`)
 export const apiUpdateLawyerBackup = (id, backup) => defaultClient.post(`${businessPrefix}/lawyers/backup/${id}/${backup}`)
