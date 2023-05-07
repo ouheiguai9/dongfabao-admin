@@ -1,5 +1,88 @@
 <template>
-  <section v-if="lawyer !== null"></section>
+  <section v-if="lawyer !== null">
+    <el-form ref="refEditForm" :model="lawyer" :rules="editFormRules" label-width="120px">
+      <el-row>
+        <el-col :offset="3" :span="8">
+          <el-form-item label="律师电话">
+            <el-input v-model="lawyer.phone" disabled />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="3" :span="8">
+          <el-form-item label="律师姓名" prop="name">
+            <el-input v-model="lawyer.name" placeholder="律师姓名" />
+          </el-form-item>
+        </el-col>
+        <el-col :offset="2" :span="8">
+          <el-form-item label="身份证号" prop="certificate">
+            <el-input v-model="lawyer.certificate" placeholder="身份证号" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="3" :span="8">
+          <el-form-item label="执业证号" prop="lawId">
+            <el-input v-model="lawyer.lawId" placeholder="执业证号" />
+          </el-form-item>
+        </el-col>
+        <el-col :offset="2" :span="8">
+          <el-form-item label="执业律所" prop="lawFirm">
+            <el-input v-model="lawyer.lawFirm" placeholder="执业律所" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="3" :span="18">
+          <el-form-item label="擅长领域">
+            <el-checkbox v-for="item in skillItemList" :key="item.value" v-model="lawyer[item.value]" :label="item.text" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="3" :span="8">
+          <el-form-item label="银行卡号">
+            <el-input v-model="lawyer.bankId" placeholder="银行卡号" />
+          </el-form-item>
+        </el-col>
+        <el-col :offset="2" :span="8">
+          <el-form-item label="开户银行">
+            <el-input v-model="lawyer.bank" placeholder="开户银行" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="3" :span="8">
+          <el-form-item label="律师状态">
+            <el-input v-model="lawyer.stateText" disabled />
+          </el-form-item>
+        </el-col>
+        <el-col :offset="2" :span="8">
+          <el-form-item label="注册时间">
+            <el-input v-model="lawyer.createTime" disabled />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="3" :span="8">
+          <el-form-item label="是否兜底">
+            <el-switch v-model="lawyer.backup" active-text="是" inactive-text="否" disabled />
+          </el-form-item>
+        </el-col>
+        <el-col :offset="2" :span="8">
+          <el-form-item label="是否禁用">
+            <el-switch v-model="lawyer.locked" active-text="是" inactive-text="否" disabled />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :offset="3" :span="18" class="center-content">
+          <el-button type="primary" @click="saveLawyer">保存</el-button>
+          <el-button @click="lawyer = null">返回</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
+  </section>
   <section v-else>
     <el-form :model="queryForm" class="condition-form">
       <el-row :gutter="20">
@@ -52,7 +135,7 @@
     <el-table :data="tableData" :row-class-name="rowClassName" border stripe>
       <el-table-column fixed header-align="center" label="律师电话" width="120">
         <template #default="scope">
-          <el-link type="primary" @click="lawyer = scope.row">
+          <el-link type="primary" @click=";(row = scope.row), (lawyer = Object.assign({}, row))">
             {{ scope.row.phone }}
           </el-link>
         </template>
@@ -105,13 +188,15 @@ import {
   apiApproveLawyer,
   apiGetLawyerList,
   apiGetLawyerStateList,
-  apiUpdateCommentVisible,
   apiUpdateLawyerBackup,
   apiUpdateLawyerLocked,
+  apiUpdateLawyer,
 } from 'apis/business.js'
 import PurePagination from 'components/pure/PurePagination.vue'
 
 const feedback = inject('feedback')
+const refEditForm = ref(null)
+const row = ref(null)
 const lawyer = ref(null)
 const stateList = ref([])
 const skillItemList = [
@@ -158,6 +243,12 @@ const queryForm = reactive({
   state: [],
   key: [],
   createTime: [],
+})
+const editFormRules = reactive({
+  name: [{ required: true, message: '请输入律师姓名', trigger: 'blur' }],
+  certificate: [{ required: true, message: '请输入律师身份证号', trigger: 'blur' }],
+  lawId: [{ required: true, message: '请输入执业证号', trigger: 'blur' }],
+  lawFirm: [{ required: true, message: '请输入执业律所', trigger: 'blur' }],
 })
 const pager = reactive({
   page: 0,
@@ -221,6 +312,22 @@ function rowClassName({ row }) {
 
 function isApproved(state) {
   return 'CREATED|NOT_APPROVED'.indexOf(state) === -1
+}
+
+function saveLawyer() {
+  refEditForm.value.validate((valid) => {
+    if (valid) {
+      feedback.showAppLoading()
+      apiUpdateLawyer(lawyer.value)
+        .then(({ data }) => {
+          Object.assign(row.value, data)
+          feedback.showSuccessMessage()
+        })
+        .finally(() => feedback.closeAppLoading())
+    } else {
+      return false
+    }
+  })
 }
 
 onBeforeMount(() => {
